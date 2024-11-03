@@ -9,13 +9,20 @@ this_dir = pathlib.Path(__file__).resolve().parent
 
 def home(request, *args, **kwargs):
 
-    my_title = "Django"
+    qs = PageVisit.objects.all()
+    page_qs = PageVisit.objects.filter(path = request.path)
+    
+
+    my_title = "My Page"
     my_context=  {
-        "title": my_title
+        "title": my_title,
+        "page_count": page_qs.count(), 
+        "total_count": qs.count(),
+        "percent" : (100 * page_qs.count()) / qs.count()
     }
-    html_ = ""
+    print("  path :  " , request.path)
     html_template  = "home.html"
-    PageVisit.objects.create()
+    PageVisit.objects.create(path = request.path)
     return render(request, html_template, my_context)
 
 def old_home(request, *args, **kwargs):
